@@ -1,69 +1,77 @@
 import wx
 import wx.grid as gridlib
+from main import GridFrame
+import random
 
-class CustomTable(gridlib.GridTableBase):
-    def __init__(self):
-        super().__init__()
-        self.data = [
-            ["0", "1"],
-            ["-1", "2"]
-        ]
-        self.col_labels = ["Column 0", "Column 1"]
-        self.cell_background_colors = {}
+class TaskFrame(GridFrame):
+    def __init__(self, parent):
+        """
+        Constructor
+        This method initializes the inherited frame and its components.
+        Important attributes:
+        - `self.number_grid`: The grid object
+        - `self.randomize_numbers`: The button to generate random numbers
+        - `self.max_number_mark_button`: The button to mark the highest number
+        The event handlers are already connected.
+        """
+        GridFrame.__init__(self, parent)
+        self.set_float_renderer()
+        self.set_float_editor()
+        self.randomize_all_cells()
 
-    def GetNumberRows(self):
-        return len(self.data)
+    def randomize_all_cells(self):
+        """
+        Generate random numbers for all cells in the grid and colorize them the same as in colorize_cell.
+        """
+        ...
 
-    def GetNumberCols(self):
-        return len(self.col_labels)
+    def set_float_renderer(self):
+        """
+        Set the renderer for all cells in the grid to display float values.
+        """
+        ...
 
-    def IsEmptyCell(self, row, col):
-        return self.data[row][col] == ""
+    def set_float_editor(self):
+        """
+        Set the editor for all cells in the grid to edit float values.
+        """
+        ...
 
-    def GetValue(self, row, col):
-        return self.data[row][col]
+    def colorize_cell(self, event):
+        """
+        Event handler for cell change
+        Change the background color of the cell when the value is changed, based on if the value is negative or positive.
+        """
+        row = event.GetRow()
+        col = event.GetCol()
+        self.colorize_cell_direct(row, col)
+        event.Skip()
 
-    def SetValue(self, row, col, value):
-        self.data[row][col] = value
-        try:
-            if float(value) < 0:
-                self.SetCellBackgroundColor(row, col, wx.Colour(255, 0, 0))  # Red
-            else:
-                self.SetCellBackgroundColor(row, col, wx.Colour(255, 255, 255))  # White
-        except ValueError:
-            self.SetCellBackgroundColor(row, col, wx.Colour(255, 255, 255))
+    def colorize_cell_direct(self, row, col):
+        """
+        Change the background color of the cell based on the value.
+        """
+        ...
 
-    def GetColLabelValue(self, col):
-        return self.col_labels[col]
+    def set_random_numbers(self, event):
+        """
+        Event handler for random number generation
+        This method is called when the 'Randomize Numbers' button is clicked.
+        It will generate random numbers and set them to the grid.
+        """
+        ...
+        event.Skip()
 
-    def SetCellBackgroundColor(self, row, col, color):
-        self.cell_background_colors[(row, col)] = color
-
-    def GetAttr(self, row, col, kind):
-        attr = gridlib.GridCellAttr()
-        if (row, col) in self.cell_background_colors:
-            attr.SetBackgroundColour(self.cell_background_colors[(row, col)])
-        return attr
-
-class MyFrame(wx.Frame):
-    def __init__(self):
-        super().__init__(None, title="Custom GridTableBase Example")
-        panel = wx.Panel(self)
-        grid = gridlib.Grid(panel)
-        table = CustomTable()
-        grid.SetTable(table, True)
-
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(grid, 1, wx.EXPAND)
-        panel.SetSizer(sizer)
-        self.SetSize((400, 300))
-
-class MyApp(wx.App):
-    def OnInit(self):
-        frame = MyFrame()
-        frame.Show()
-        return True
+    def mark_highest(self, event):
+        """
+        This method is called when the 'Mark Highest Number' button is clicked.
+        It will mark the highest number in the grid with a different background color.
+        """
+        ...
+        event.Skip()
 
 if __name__ == "__main__":
-    app = MyApp()
+    app = wx.App(False)
+    frame = TaskFrame(None)
+    frame.Show(True)
     app.MainLoop()
