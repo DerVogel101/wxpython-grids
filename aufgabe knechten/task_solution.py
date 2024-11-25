@@ -1,6 +1,6 @@
 import wx
 import wx.grid as gridlib
-from main import GridFrame
+from base_solution import GridFrame
 import random
 
 class TaskFrame(GridFrame):
@@ -18,6 +18,8 @@ class TaskFrame(GridFrame):
         self.set_float_renderer()
         self.set_float_editor()
         self.randomize_all_cells()
+        self.number_grid.SetRowLabelSize(0)
+        self.number_grid.SetColLabelSize(0)
 
     def randomize_all_cells(self):
         """
@@ -33,7 +35,7 @@ class TaskFrame(GridFrame):
         """
         Set the renderer for all cells in the grid to display float values.
         """
-        float_renderer = gridlib.GridCellFloatRenderer()
+        float_renderer = gridlib.GridCellFloatRenderer(precision=2)  # Normally without
         for row in range(self.number_grid.GetNumberRows()):
             for col in range(self.number_grid.GetNumberCols()):
                 self.number_grid.SetCellRenderer(row, col, float_renderer)
@@ -101,6 +103,30 @@ class TaskFrame(GridFrame):
 
         if max_row != -1 and max_col != -1:
             self.number_grid.SetCellBackgroundColour(max_row, max_col, wx.Colour(0, 0, 255))  # Blue for the highest value
+            self.number_grid.ForceRefresh()
+
+        event.Skip()
+
+    def mark_lowest(self, event):
+        """
+        This method is called when the 'Mark Lowest Number' button is clicked.
+        It will mark the lowest number in the grid with a different background color.
+        """
+        min_value = float('inf')
+        min_row, min_col = -1, -1
+
+        for row in range(self.number_grid.GetNumberRows()):
+            for col in range(self.number_grid.GetNumberCols()):
+                try:
+                    value = float(self.number_grid.GetCellValue(row, col))
+                    if value < min_value:
+                        min_value = value
+                        min_row, min_col = row, col
+                except ValueError:
+                    continue
+
+        if min_row != -1 and min_col != -1:
+            self.number_grid.SetCellBackgroundColour(min_row, min_col, wx.Colour(255, 0, 255))
             self.number_grid.ForceRefresh()
 
         event.Skip()

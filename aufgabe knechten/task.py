@@ -1,6 +1,6 @@
 import wx
 import wx.grid as gridlib
-from main import GridFrame
+from base import GridFrame
 import random
 
 class TaskFrame(GridFrame):
@@ -18,6 +18,7 @@ class TaskFrame(GridFrame):
         self.set_float_renderer()
         self.set_float_editor()
         self.randomize_all_cells()
+        # TODO: Hide row labels and Column labels
 
     def randomize_all_cells(self):
         """
@@ -66,6 +67,14 @@ class TaskFrame(GridFrame):
         """
         This method is called when the 'Mark Highest Number' button is clicked.
         It will mark the highest number in the grid with a different background color.
+        """
+        ...
+        event.Skip()
+
+    def mark_lowest(self, event):
+        """
+        This method is called when the 'Mark Lowest Number' button is clicked.
+        It will mark the lowest number in the grid with a different background color.
         """
         ...
         event.Skip()
